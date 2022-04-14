@@ -1,8 +1,9 @@
 port: 8080
-
 plugins:
   console:
     open: true
-  logger:
-  manager:
-  status:
+  logger: null
+  manager: null
+  status: null
+  echo: null
+  sandbox: null

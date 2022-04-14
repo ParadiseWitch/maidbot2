@@ -8,8 +8,10 @@ specifiers:
   '@koishijs/plugin-adapter-telegram': ^2.2.2
   '@koishijs/plugin-console': ^3.2.5
   '@koishijs/plugin-dataview': ^1.2.2
+  '@koishijs/plugin-echo': 1.1.0
   '@koishijs/plugin-logger': ^1.2.2
   '@koishijs/plugin-manager': ^1.7.0
+  '@koishijs/plugin-sandbox': 1.1.0
   '@koishijs/plugin-status': ^5.3.5
   '@koishijs/scripts': ^1.3.1
   cross-env: ^7.0.3
@@ -26,8 +28,10 @@ dependencies:
   '@koishijs/plugin-adapter-telegram': 2.2.2_koishi@4.5.2
   '@koishijs/plugin-console': 3.2.5_koishi@4.5.2
   '@koishijs/plugin-dataview': 1.2.2_123278f286368e4bec6d7907cb18ad0c
+  '@koishijs/plugin-echo': 1.1.0_koishi@4.5.2
   '@koishijs/plugin-logger': 1.2.2_123278f286368e4bec6d7907cb18ad0c
   '@koishijs/plugin-manager': 1.7.0_556a7a71f1d950289bf9f4090399be18
+  '@koishijs/plugin-sandbox': 1.1.0_koishi@4.5.2
   '@koishijs/plugin-status': 5.3.5_123278f286368e4bec6d7907cb18ad0c
   koishi: 4.5.2
 
@@ -132,6 +136,14 @@ packages:
       fastest-levenshtein: 1.0.12
     dev: false
 
+  /@koishijs/helpers/1.1.0_koishi@4.5.2:
+    resolution: {integrity: sha512-1xBkjwee25aIHmgx01vQi9nO1Q91cx5zK5LjLfZGD82wNyDGbff0RW9pvWEXDKnS2VK6oNkn8wMLv3VOZNJi3A==}
+    peerDependencies:
+      koishi: ^4.4.1
+    dependencies:
+      koishi: 4.5.2
+    dev: false
+
   /@koishijs/loader/1.0.0:
     resolution: {integrity: sha512-9Gbe9JLa/d+7nZkQH+xIJFmnsHlWJhlAbhA8UHmOqj+ei8/08gB1RGI5A1FRw8S5DguITP0hr8/40uqTqWVXZA==}
     dependencies:
@@ -218,6 +230,15 @@ packages:
       koishi: 4.5.2
     dev: false
 
+  /@koishijs/plugin-echo/1.1.0_koishi@4.5.2:
+    resolution: {integrity: sha512-ZnARualTA6RutxY9VhwfyC8zYsrnFceCk4tRR01soY6se6clr3qZMmrf6+NE9gBTe8+oeDjZVBJ5oWupBnVYvQ==}
+    peerDependencies:
+      koishi: ^4.4.1
+    dependencies:
+      '@koishijs/helpers': 1.1.0_koishi@4.5.2
+      koishi: 4.5.2
+    dev: false
+
   /@koishijs/plugin-logger/1.2.2_123278f286368e4bec6d7907cb18ad0c:
     resolution: {integrity: sha512-JpcDh0Gl5VCBC/KHPJMy0y6bPu63aMcrNc4h8viIEvP6HAk/xVXn0JbltEGiX+txJp27doSjFRRbUNPlL3ik4A==}
     peerDependencies:
@@ -242,6 +263,14 @@ packages:
       koishi: 4.5.2
       semver: 7.3.7
       which-pm-runs: 1.1.0
+    dev: false
+
+  /@koishijs/plugin-sandbox/1.1.0_koishi@4.5.2:
+    resolution: {integrity: sha512-y0eJcgBMvGhCYjfVP1IsFvHkmiubAJHWdMlbnkss7eZ39nt0nzApfHAubITIEPBr7A0c7gqfC4fUUw5Z3UldXg==}
+    peerDependencies:
+      koishi: ^4.5.2
+    dependencies:
+      koishi: 4.5.2
     dev: false
 
   /@koishijs/plugin-status/5.3.5_123278f286368e4bec6d7907cb18ad0c:
