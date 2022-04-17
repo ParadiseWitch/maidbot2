@@ -1,4 +1,4 @@
-port: 8080
+port: 1234
 plugins:
   console:
     open: true
@@ -7,3 +7,11 @@ plugins:
   status: null
   echo: null
   sandbox: null
+  database-mongo:
+    username: ''
+    password: ''
+    host: ${{ env.MONGO_HOST }}
+    port: 3344
+    database: ${{ env.MONGO_DB }}
+  dataview: null
+  clockin: null
