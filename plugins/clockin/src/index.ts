@@ -67,9 +67,13 @@ export function apply(ctx: Context) {
   ctx.command('clockin.w', '查询本周打卡情况')
     .alias('本周打卡')
     .action(async ({ session }) => {
-      const query = {
+      const now = new Date();
+      const query: Query = {
         user: session.uid,
-        // TODO 日期范围
+        date: {
+          $gte: firstDayOfWeek(now),
+          $lte: lastDayOfWeek(now),
+        }
       }
       const tDate = await ctx.database.get('clockin', query);
       return tDate.reduce((prev, cur) => {
@@ -133,3 +137,16 @@ export const uuid = () => {
   var uuid = s.join("");
   return uuid;
 }
+const firstDayOfWeek = (date: Date) => { 
+  let y = date.getFullYear();
+  let m = date.getMonth() + 1;
+  let d = date.getDate();
+  let dayOfWeek = date.getDay() || 7;
+  let nd = d - dayOfWeek + 1;
+  return new Date(`${y}/${m}/${nd}`);
+}
+
+const lastDayOfWeek = (date: Date) => { 
+  const fd = firstDayOfWeek(date);
+  return new Date(fd.getTime() + 6 * 24 * 60 * 60 * 1000);
+};
