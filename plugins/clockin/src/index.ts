@@ -1,4 +1,6 @@
-import { Context } from 'koishi'
+import { Random } from 'koishi'
+import { MapUneval } from 'koishi'
+import { Context, Query } from 'koishi'
 
 export const name = 'clockin'
 
@@ -9,45 +11,70 @@ declare module 'koishi' {
 }
 
 export interface Clockin {
-  id: number
+  id: string
   name: string,
   user: string,
-  date: string,
+  date: Date,
   note: string,
 }
 
 export function apply(ctx: Context) {
   ctx.model.extend('clockin', {
-    id: 'unsigned',
+    id: 'string',
     name: 'string',
     user: 'string',
-    date: 'string',
+    date: 'date',
     note: 'string',
   }, {
     // 使用自增的主键值
     autoInc: true,
   })
 
-
-
-  // TOOD 显示错误提示信息
-  ctx.command('clockin.q [date]')
-    .action(async (_, dataStr) => {
-      const date = getDateFormStr(dataStr);
-      return date.toString();
-    })
-  ctx.command('clockin.a [date]')
+  ctx.command('clockin.a [name] [date] [note]')
     .alias('打卡')
-    .action(async ({ session }, dataStr) => {
-      const date = getDateFormStr(dataStr);
-      const clockinDate = await ctx.database.create('clockin', {
-        name: "",
+    .action(async ({ session }, name, dataStr, note) => {
+      let date: Date;
+      try { date = getDateFormStr(dataStr) } catch (e) { return e };
+      const query: Query = { user: session.uid, date };
+      let tData: Clockin = {
+        id: uuid(),
+        name: name || '',
         user: session.uid,
-        date: dateFormat(date),
-        note: "",
-      })
-      
-      return `打卡成功!\n打卡内容：${clockinDate.name || '无'}，打卡时间：${clockinDate.date}，备注：${clockinDate.note || '无'}`;
+        date,
+        note: note || '',
+      }
+      const oldData = await ctx.database.get('clockin', query);
+      if (oldData && oldData.length > 0) {
+        await ctx.database.set('clockin', query, tData);
+        return "已打卡\n" + getRetMsg(tData);
+      } else {
+        tData = await ctx.database.create('clockin', tData);
+        return "打卡成功\n" + getRetMsg(tData);
+      }
+    })
+
+  ctx.command('clockin.q [date]', '查询指定日期的打卡情况')
+    .action(async ({ session }, dataStr) => {
+      let date: Date;
+      try { date = getDateFormStr(dataStr) } catch (e) { return e };
+      const query: Query = { user: session.uid, date };
+      const tDate = await ctx.database.get('clockin', query);
+      return tDate.reduce((prev, cur) => {
+        return prev + getRetMsg(cur) + '\n'
+      }, '');
+    })
+
+  ctx.command('clockin.w', '查询本周打卡情况')
+    .alias('本周打卡')
+    .action(async ({ session }) => {
+      const query = {
+        user: session.uid,
+        // TODO 日期范围
+      }
+      const tDate = await ctx.database.get('clockin', query);
+      return tDate.reduce((prev, cur) => {
+        return prev + getRetMsg(cur) + '\n'
+      }, '');
     })
   // .option('query', '-q <date> 查询指定指定日期的用户打卡记录')
   // .option('add', '-a <date> 添加指定指定日期的用户打卡记录')
@@ -59,6 +86,9 @@ export function apply(ctx: Context) {
 }
 
 
+const getRetMsg = (data: Clockin) => `打卡内容：${data.name || '无'}，打卡时间：${data.date}，备注：${data.note || '无'}`
+
+
 export const getDateFormStr = (str: string): Date => {
   let tDate: Date;
   if (!str) {
@@ -68,12 +98,12 @@ export const getDateFormStr = (str: string): Date => {
   }
   tDate = str ? new Date(str) : new Date();
   if (tDate.toString() === 'Invalid Date') {
-    throw '日期格式错误，请检查！参考格式：2022/01/01';
+    throw '日期格式错误, 请检查！参考格式：2022/01/01';
   }
   return tDate;
 }
 
-const dateFormat = (date: Date, fmt: string = 'yyyy/MM/dd') => { //author: meizz 
+export const dateFormat = (date: Date, fmt: string = 'yyyy/MM/dd') => { //author: meizz 
   var o = {
     "M+": date.getMonth() + 1, //月份 
     "d+": date.getDate(), //日 
@@ -87,4 +117,19 @@ const dateFormat = (date: Date, fmt: string = 'yyyy/MM/dd') => { //author: meizz
   for (var k in o)
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
   return fmt;
+}
+
+
+export const uuid = () => {
+  var s = [];
+  var hexDigits = "0123456789abcdef";
+  for (var i = 0; i < 36; i++) {
+    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+  }
+  s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+  s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+  s[8] = s[13] = s[18] = s[23] = "-";
+
+  var uuid = s.join("");
+  return uuid;
 }
