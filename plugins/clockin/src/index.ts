@@ -1,6 +1,7 @@
 import { Random } from 'koishi'
-import { MapUneval } from 'koishi'
+import { Time } from 'koishi'
 import { Context, Query } from 'koishi'
+import { DateUtils, UUID } from 'utils'
 
 export const name = 'clockin'
 
@@ -37,7 +38,7 @@ export function apply(ctx: Context) {
       try { date = getDateFormStr(dataStr) } catch (e) { return e };
       const query: Query = { user: session.uid, date };
       let tData: Clockin = {
-        id: uuid(),
+        id: UUID(),
         name: name || '',
         user: session.uid,
         date,
@@ -71,8 +72,8 @@ export function apply(ctx: Context) {
       const query: Query = {
         user: session.uid,
         date: {
-          $gte: firstDayOfWeek(now),
-          $lte: lastDayOfWeek(now),
+          $gte: DateUtils.firstDayOfWeek(now),
+          $lte: DateUtils.lastDayOfWeek(now),
         }
       }
       const tDate = await ctx.database.get('clockin', query);
@@ -96,6 +97,7 @@ const getRetMsg = (data: Clockin) => `打卡内容：${data.name || '无'}，打
 export const getDateFormStr = (str: string): Date => {
   let tDate: Date;
   if (!str) {
+    Time.getDateNumber
     tDate = new Date();
   } else {
     tDate = new Date(str);
@@ -107,46 +109,6 @@ export const getDateFormStr = (str: string): Date => {
   return tDate;
 }
 
-export const dateFormat = (date: Date, fmt: string = 'yyyy/MM/dd') => { //author: meizz 
-  var o = {
-    "M+": date.getMonth() + 1, //月份 
-    "d+": date.getDate(), //日 
-    "h+": date.getHours(), //小时 
-    "m+": date.getMinutes(), //分 
-    "s+": date.getSeconds(), //秒 
-    "q+": Math.floor((date.getMonth() + 3) / 3), //季度 
-    "S": date.getMilliseconds() //毫秒 
-  };
-  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
-  for (var k in o)
-    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-  return fmt;
-}
 
 
-export const uuid = () => {
-  var s = [];
-  var hexDigits = "0123456789abcdef";
-  for (var i = 0; i < 36; i++) {
-    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-  }
-  s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-  s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-  s[8] = s[13] = s[18] = s[23] = "-";
 
-  var uuid = s.join("");
-  return uuid;
-}
-const firstDayOfWeek = (date: Date) => { 
-  let y = date.getFullYear();
-  let m = date.getMonth() + 1;
-  let d = date.getDate();
-  let dayOfWeek = date.getDay() || 7;
-  let nd = d - dayOfWeek + 1;
-  return new Date(`${y}/${m}/${nd}`);
-}
-
-const lastDayOfWeek = (date: Date) => { 
-  const fd = firstDayOfWeek(date);
-  return new Date(fd.getTime() + 6 * 24 * 60 * 60 * 1000);
-};
