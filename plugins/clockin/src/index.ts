@@ -1,5 +1,3 @@
-import { Random } from 'koishi'
-import { Time } from 'koishi'
 import { Context, Query } from 'koishi'
 import { DateUtils, UUID } from 'utils'
 
@@ -93,15 +91,8 @@ export function apply(ctx: Context) {
 
 const getRetMsg = (data: Clockin) => `打卡内容：${data.name || '无'}，打卡时间：${data.date}，备注：${data.note || '无'}`
 
-
 export const getDateFormStr = (str: string): Date => {
   let tDate: Date;
-  if (!str) {
-    Time.getDateNumber
-    tDate = new Date();
-  } else {
-    tDate = new Date(str);
-  }
   tDate = str ? new Date(str) : new Date();
   if (tDate.toString() === 'Invalid Date') {
     throw '日期格式错误, 请检查！参考格式：2022/01/01';
