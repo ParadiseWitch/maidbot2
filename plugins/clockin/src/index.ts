@@ -1,5 +1,5 @@
 import { Context, Query } from 'koishi'
-// import { DateUtils, UUID } from '@maidbot2/koishi-utils'
+import { DateUtils, UUID } from '@maidbot2/koishi-utils'
 
 export const name = 'clockin'
 
@@ -36,8 +36,7 @@ export function apply(ctx: Context) {
       try { date = getDateFormStr(dataStr) } catch (e) { return e };
       const query: Query = { user: session.uid, date };
       let tData: Clockin = {
-        // id: UUID(),
-        id: 'UUID()',
+        id: UUID(),
         name: name || '',
         user: session.uid,
         date,
@@ -70,10 +69,10 @@ export function apply(ctx: Context) {
       const now = new Date();
       const query: Query = {
         user: session.uid,
-        // date: {
-        //   $gte: DateUtils.firstDayOfWeek(now),
-        //   $lte: DateUtils.lastDayOfWeek(now),
-        // }
+        date: {
+          $gte: DateUtils.firstDayOfWeek(now),
+          $lte: DateUtils.lastDayOfWeek(now),
+        }
       }
       const tDate = await ctx.database.get('clockin', query);
       return tDate.reduce((prev, cur) => {
