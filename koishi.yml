@@ -15,3 +15,7 @@ plugins:
     database: ${{ env.MONGO_DB }}
   dataview: null
   clockin: null
+  puppeteer:
+    browser:
+      executablePath: >-
+        /Users/maid/projects/code/qqbot/maidbot2/node_modules/puppeteer-core/.local-chromium/mac-982053/chrome-mac/Chromium.app/Contents/MacOS/Chromium
