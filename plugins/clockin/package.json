@@ -20,6 +20,6 @@
     "koishi": "^4.5.2"
   },
   "dependencies": {
-    "@maidbot2/koishi-utils": "^1.0.0"
+    "@maidbot2/utils": "^1.0.0"
   }
 }

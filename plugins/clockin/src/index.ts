@@ -1,5 +1,5 @@
 import { Context, Query } from 'koishi'
-import { DateUtils, UUID } from '@maidbot2/koishi-utils'
+import { DateUtils, UUID } from '@maidbot2/utils'
 
 export const name = 'clockin'
 

@@ -1,5 +1,8 @@
-port: 1234
+port: 5140
+maxPort: 5149
 plugins:
+  help: null
+  suggest: null
   console:
     open: true
   logger: null
@@ -7,6 +10,12 @@ plugins:
   status: null
   echo: null
   sandbox: null
+  adapter-onebot:
+    bots: []
+  adapter-discord:
+    bots: []
+  adapter-telegram:
+    bots: []
   database-mongo:
     username: ''
     password: ''

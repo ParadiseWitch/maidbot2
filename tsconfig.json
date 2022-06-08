@@ -4,6 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "koishi-plugin-*": ["plugins/*/src"],
+      "*": [
+        "packages/*/src"
+      ],
     },
   },
 }
